@@ -1,18 +1,27 @@
 import './App.css';
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { Provider } from 'react-redux';
 
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authActions';
+import { clearCurrentProfile } from './actions/profileActions';
+import store from './store/configureStore';
+
+import PrivateRoute from './components/common/PrivateRoute';
+import RequireAuth from './components/common/RequireAuth';
 
 import Footer from './components/layout/Footer';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-import store from './store/configureStore';
+import Dashboard from './components/dashboard/Dashboard';
+import CreateProfile from './components/create-profile/CreateProfile';
+import EditProfile from './components/edit-profile/EditProfile';
+import AddExperience from './components/add-credentials/AddExperience';
+import AddEducation from './components/add-credentials/AddEducation';
 
 // check for token
 if (localStorage.jwtToken) {
@@ -28,7 +37,8 @@ if (localStorage.jwtToken) {
   if (decoded.exp < currentTime) {
     // Logout User
     store.dispatch(logoutUser());
-    // TODO: clear current profile
+    // Clear current profile
+    store.dispatch(clearCurrentProfile());
     // Redirect to login
     window.location.href = '/login';
   }
@@ -43,8 +53,35 @@ class App extends Component {
             <Navbar />
             <Route path="/" component={Landing} exact />
             <div className="container">
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
+              <Switch>
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Route
+                  exact
+                  path="/dashboard"
+                  component={RequireAuth(Dashboard)}
+                />
+                <Route
+                  exact
+                  path="/create-profile"
+                  component={RequireAuth(CreateProfile)}
+                />
+                <Route
+                  exact
+                  path="/edit-profile"
+                  component={RequireAuth(EditProfile)}
+                />
+                <Route
+                  exact
+                  path="/add-experience"
+                  component={RequireAuth(AddExperience)}
+                />
+                <Route
+                  exact
+                  path="/add-education"
+                  component={RequireAuth(AddEducation)}
+                />
+              </Switch>
             </div>
             <Footer />
           </div>
@@ -55,3 +92,5 @@ class App extends Component {
 }
 
 export default App;
+
+//component={RequireAuth(Dashboard)}

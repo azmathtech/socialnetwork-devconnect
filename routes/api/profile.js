@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 // Load Validation
-const validateProfileInput = require('../../validation/profile');
+//const validateProfileInput = require('../../validation/profile');
+const validateFunctions = require('../../validation/profile');
+const validateProfileInput = validateFunctions.validateProfileInput;
+const removeProtocol = validateFunctions.removeProtocol;
 const validateExperienceInput = require('../../validation/experience');
 const validateEducationInput = require('../../validation/education');
 
@@ -126,7 +129,9 @@ router.post(
       profileFields.company = req.body.company;
     }
     if (req.body.website) {
-      profileFields.website = req.body.website;
+      //console.log('inside profile.js', req.body.website);
+      const website = removeProtocol(req.body.website);
+      profileFields.website = website;
     }
     if (req.body.location) {
       profileFields.location = req.body.location;

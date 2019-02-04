@@ -22,6 +22,8 @@ import CreateProfile from './components/create-profile/CreateProfile';
 import EditProfile from './components/edit-profile/EditProfile';
 import AddExperience from './components/add-credentials/AddExperience';
 import AddEducation from './components/add-credentials/AddEducation';
+import Profiles from './components/profiles/Profiles';
+import Profile from './components/profile/Profile';
 
 // check for token
 if (localStorage.jwtToken) {
@@ -33,8 +35,11 @@ if (localStorage.jwtToken) {
   store.dispatch(setCurrentUser(decoded));
 
   // Check for expried token
-  const currentTime = Date.now / 1000;
+  const currentTime = Math.floor(Date.now() / 1000);
+  console.log('outside check, current time: ', currentTime);
+  console.log('outside check, decode experation: ', decoded.exp);
   if (decoded.exp < currentTime) {
+    console.log('Inside check: ', currentTime);
     // Logout User
     store.dispatch(logoutUser());
     // Clear current profile
@@ -43,7 +48,7 @@ if (localStorage.jwtToken) {
     window.location.href = '/login';
   }
 }
-
+console.log('When is this logged');
 class App extends Component {
   render() {
     return (
@@ -81,6 +86,8 @@ class App extends Component {
                   path="/add-education"
                   component={RequireAuth(AddEducation)}
                 />
+                <Route exact path="/profiles" component={Profiles} />
+                <Route exact path="/profile/:handle" component={Profile} />
               </Switch>
             </div>
             <Footer />

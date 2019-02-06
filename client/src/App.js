@@ -9,7 +9,7 @@ import { setCurrentUser, logoutUser } from './actions/authActions';
 import { clearCurrentProfile } from './actions/profileActions';
 import store from './store/configureStore';
 
-import PrivateRoute from './components/common/PrivateRoute';
+//import PrivateRoute from './components/common/PrivateRoute';
 import RequireAuth from './components/common/RequireAuth';
 
 import Footer from './components/layout/Footer';
@@ -24,6 +24,9 @@ import AddExperience from './components/add-credentials/AddExperience';
 import AddEducation from './components/add-credentials/AddEducation';
 import Profiles from './components/profiles/Profiles';
 import Profile from './components/profile/Profile';
+import NotFound from './components/NotFound/NotFound';
+import Posts from './components/posts/Posts';
+import Post from './components/posts/Post';
 
 // check for token
 if (localStorage.jwtToken) {
@@ -88,6 +91,9 @@ class App extends Component {
                 />
                 <Route exact path="/profiles" component={Profiles} />
                 <Route exact path="/profile/:handle" component={Profile} />
+                <Route exact path="/feed" component={RequireAuth(Posts)} />
+                <Route exact path="/post/:id" component={RequireAuth(Post)} />
+                <Route component={NotFound} />
               </Switch>
             </div>
             <Footer />

@@ -9,22 +9,43 @@ import ProfileCreds from './ProfileCreds';
 import ProfileGithub from './ProfileGithub';
 import Spinner from '../common/Spinner';
 import { getProfileByHandle } from '../../actions/profileActions';
+import isEmpty from '../../validation/is-empty';
 
 class Profile extends Component {
+  // componentDidMount() {
+  //   if (this.props.match.params.handle) {
+  //     this.props.getProfileByHandle(this.props.match.params.handle);
+  //   }
+  // }
+
   componentDidMount() {
-    if (this.props.match.params.handle) {
-      this.props.getProfileByHandle(this.props.match.params.handle);
+    const { handle } = this.props.match.params;
+
+    if (handle) {
+      this.props.getProfileByHandle(handle);
     }
   }
 
   render() {
     const { profile, loading } = this.props.profile;
+    //console.log('profile', profile);
     let profileContent;
 
     if (profile === null || loading) {
+      //console.log('profilenull?', profile);
       profileContent = <Spinner />;
     } else {
-      profileContent = (
+      //console.log('profileempty?', profile);
+      profileContent = isEmpty(profile) ? (
+        <div className="row">
+          <h2 className="display-4 text-center">Sorry, profile not found.</h2>
+          <div className="col-md-4">
+            <Link to="/profiles" className="btn btn-light mb-3 float-left">
+              Back To Profiles
+            </Link>
+          </div>
+        </div>
+      ) : (
         <div>
           <div className="row">
             <div className="col-md-6">
